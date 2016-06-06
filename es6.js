@@ -24,7 +24,8 @@ var dzAutoReply = {
      * 配置选项
      */
     options: {
-        baseuri: './list.json',
+        //baseuri: './list.json',
+        baseuri: '/Users/lincenying/Library/Preferences/clowwindy.ShadowsocksX.plist',
     },
     /**
      * 开始下载（程序入口函数）
@@ -45,7 +46,9 @@ var dzAutoReply = {
     getJson(callback) {
         var url = this.options.baseuri;
         var data = node.fs.readFileSync(url, "utf-8");
-        var json = JSON.parse(data);
+        var re = new RegExp(/\{"current".*?\}\]\}/);
+        var config = re.exec(data)
+        var json = JSON.parse(config[0]);
         callback(null, json.profiles);
     },
     checkAllIp(ips, callback) {

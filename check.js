@@ -24,7 +24,7 @@ var dzAutoReply = {
      * 配置选项
      */
     options: {
-        baseuri: 'D:/Soft/应用软件/ShadowsocksR/gui-config.json',
+        baseuri: './list.json',
     },
     /**
      * 开始下载（程序入口函数）
@@ -63,7 +63,7 @@ var dzAutoReply = {
         var self = this;
         var data = node.fs.readFileSync(self.options.baseuri, "utf-8");
         var json = JSON.parse(data);
-        callback(null, json.configs);
+        callback(null, json.profiles);
     },
     checkAllIp: function(ips, callback) {
         var self = this;
