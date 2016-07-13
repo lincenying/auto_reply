@@ -1,4 +1,4 @@
-var colors = require('colors');
+var colors = require('colors')
 var node = {
     async: require('async'),
     cheerio: require('cheerio'),
@@ -6,7 +6,7 @@ var node = {
     request: require('request'),
     url: require('url'),
     iconv: require('iconv-lite')
-};
+}
 colors.setTheme({
     silly: 'rainbow',
     input: 'grey',
@@ -18,7 +18,7 @@ colors.setTheme({
     warn: 'yellow',
     debug: 'magenta',
     error: 'red'
-});
+})
 var dzAutoReply = {
     /**
      * 配置选项
@@ -27,63 +27,60 @@ var dzAutoReply = {
         //baseuri: './list.json',
         baseuri: '/Users/lincenying/Library/Preferences/clowwindy.ShadowsocksX.plist',
     },
-    /**
-     * 开始下载（程序入口函数）
-     */
     start() {
-        var async = node.async;
+        var async = node.async
         async.waterfall([
             this.getJson.bind(this),
             this.checkAllIp.bind(this)
-        ], (err, result) => {
+        ], err => {
             if (err) {
-                console.log('error: %s', err.message);
+                console.log('error: %s', err.message)
             } else {
-                console.log('success: 测试完毕');
+                console.log('success: 测试完毕')
             }
-        });
+        })
     },
     getJson(callback) {
-        var url = this.options.baseuri;
-        var data = node.fs.readFileSync(url, "utf-8");
-        var re = new RegExp(/\{"current".*?\}\]\}/);
+        var url = this.options.baseuri
+        var data = node.fs.readFileSync(url, "utf-8")
+        var re = new RegExp(/\{"current".*?\}\]\}/)
         var config = re.exec(data)
-        var json = JSON.parse(config[0]);
-        callback(null, json.profiles);
+        var json = JSON.parse(config[0])
+        callback(null, json.profiles)
     },
     checkAllIp(ips, callback) {
-        var async = node.async;
-        async.eachSeries(ips, this.checkIp.bind(this), callback);
+        var async = node.async
+        async.eachSeries(ips, this.checkIp.bind(this), callback)
     },
     checkIp(ip, callback) {
-        var async = node.async;
+        var async = node.async
         async.waterfall([
             this.checkOneIp.bind(this, ip),
             this.getIpStatus.bind(this)
-        ], callback);
+        ], callback)
     },
     checkOneIp(ip, callback) {
-        var replyUri = 'http://www.shadowsu.com/sstest/?host=' + ip.server;
-        console.log('开始测试服务器：%s', ip.server);
+        var replyUri = 'http://www.shadowsu.com/sstest/?host=' + ip.server
+        console.log('开始测试服务器：%s', ip.server)
         node.request(replyUri, (err, res, body) => {
             var page = {
                 remarks: ip.remarks,
                 ip: ip.server,
                 html: body
-            };
-            callback(err, page);
-        });
+            }
+            callback(err, page)
+        })
     },
     getIpStatus(page, callback) {
-        var $ = node.cheerio.load(page.html);
-        var $result = $('.resultstable > tbody > tr > td');
-        var text = $result.eq(1).text();
-        if (text == "正常") {
-            console.log("%s (%s) 状态: %s".info, page.remarks, page.ip, text);
+        var $ = node.cheerio.load(page.html)
+        var $result = $('.resultstable > tbody > tr > td')
+        var text = $result.eq(1).text()
+        if (text === "正常") {
+            console.log("%s (%s) 状态: %s".info, page.remarks, page.ip, text)
         } else {
-            console.log("%s (%s) 状态: %s".error, page.remarks, page.ip, text);
+            console.log("%s (%s) 状态: %s".error, page.remarks, page.ip, text)
         }
-        callback(null, page);
+        callback(null, page)
     }
-};
-dzAutoReply.start();
+}
+dzAutoReply.start()
