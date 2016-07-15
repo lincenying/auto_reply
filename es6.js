@@ -1,4 +1,5 @@
 var colors = require('colors')
+var Agent = require('socks5-http-client/lib/Agent')
 var node = {
     async: require('async'),
     cheerio: require('cheerio'),
@@ -62,7 +63,15 @@ var dzAutoReply = {
     checkOneIp(ip, callback) {
         var replyUri = 'http://www.shadowsu.com/sstest/?host=' + ip.server
         console.log('开始测试服务器：%s', ip.server)
-        node.request(replyUri, (err, res, body) => {
+        var request_option = {
+            url: replyUri,
+            agentClass: Agent,
+            agentOptions: {
+                socksHost: '127.0.0.1',
+                socksPort: 1080
+            }
+        }
+        node.request(request_option, (err, res, body) => {
             var page = {
                 remarks: ip.remarks,
                 ip: ip.server,

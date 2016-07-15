@@ -20,5 +20,8 @@
     "iconv-lite": "^0.4.13",
     "request": "^2.51.0",
     "url": "^0.10.2"
+  },
+  "devDependencies": {
+    "socks5-http-client": "^1.0.2"
   }
 }
